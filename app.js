@@ -4,10 +4,14 @@ const colors = document.getElementsByClassName('jsColor');
 const range = document.getElementById('jsRange');
 const mode = document.getElementById('jsMode');
 
+const INITIAL_COLOR = '#2c2c2c';
+const CANVAS_SIZE = 700;
+
 canvas.width = document.getElementsByClassName('canvas')[0].offsetWidth;
 canvas.height = document.getElementsByClassName('canvas')[0].offsetHeight;
 
-ctx.strokeStyle = '#2c2c2c';
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
 
 let painting = false;
@@ -17,8 +21,10 @@ function stopPainting() {
     painting = false;
 }
 
-function startPainting() {
-    painting = true;
+const startPainting = () => {
+    if(filling === false) {
+        painting = true;
+    }
 }
 
 // 마우스는 계속 움직이고 있다
@@ -40,6 +46,7 @@ function onMouseMove(event) {
 function handleColorClick(event) {
     const color = event.target.style.backgroundColor;
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
 }
 
 function handleModeClick() {
@@ -48,8 +55,16 @@ function handleModeClick() {
         mode.innerText = 'Fill';
     } else {
         filling = true;
-        mode.innerText = 'Paint'
+        mode.innerText = 'Paint';
     }
+}
+
+function handleCanvasClick() {
+    if(filling) {
+        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    }
+    // fillRect(x, y, width, height)
+    // width와 height에 의해 결정된 사이즈로 x와 y 위치에 색칠된 사각형을 그림
 }
 
 if (canvas) {
@@ -57,6 +72,7 @@ if (canvas) {
     canvas.addEventListener('mousedown', startPainting);
     canvas.addEventListener('mouseup', stopPainting);
     canvas.addEventListener('mouseleave', stopPainting);
+    canvas.addEventListener('click', handleCanvasClick);
 }
 
 
