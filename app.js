@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 const colors = document.getElementsByClassName('jsColor');
 const range = document.getElementById('jsRange');
 const mode = document.getElementById('jsMode');
+const saveBtn = document.getElementById('jsSave');
 
 const INITIAL_COLOR = '#2c2c2c';
 const CANVAS_SIZE = 700;
@@ -10,6 +11,8 @@ const CANVAS_SIZE = 700;
 canvas.width = document.getElementsByClassName('canvas')[0].offsetWidth;
 canvas.height = document.getElementsByClassName('canvas')[0].offsetHeight;
 
+ctx.fillStyle = '#fff';
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -67,12 +70,26 @@ function handleCanvasClick() {
     // width와 height에 의해 결정된 사이즈로 x와 y 위치에 색칠된 사각형을 그림
 }
 
+function handleCM(event) {
+    // 우클릭 방지
+    event.preventDefault();
+}
+
+function handleSaveClick() {
+    const image = canvas.toDataURL();
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'paintJS🎨';
+    link.click();
+}
+
 if (canvas) {
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mousedown', startPainting);
     canvas.addEventListener('mouseup', stopPainting);
     canvas.addEventListener('mouseleave', stopPainting);
     canvas.addEventListener('click', handleCanvasClick);
+    canvas.addEventListener('contextmenu', handleCM);
 }
 
 
@@ -91,4 +108,8 @@ if (range) {
 // fill or paint btn
 if (mode) {
     mode.addEventListener('click', handleModeClick);
+}
+
+if(saveBtn) {
+    saveBtn.addEventListener('click', handleSaveClick);
 }
